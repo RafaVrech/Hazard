@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.hazard.model.Alerta;
 import com.hazard.repository.AlertaRepository;
 import com.hazard.repository.UsuarioRepository;
+import com.ibm.agenda.model.Telefone;
 
 @RestController
 @RequestMapping("/alerta")
@@ -38,30 +39,35 @@ public class AlertaController {
 		return alertaOptional.isPresent() ? ResponseEntity.ok(alertaOptional.get()) : ResponseEntity.notFound().build();
 	}
 
-	@RequestMapping(method = RequestMethod.POST) // Req Param padrão jà è json
-	public ResponseEntity<Alerta> novoAlerta(@RequestBody Alerta alerta) {
-		System.out.println(alerta.getUsuario());
-		if (alerta != null && alerta.getUsuario() != null && alerta.getUsuario().getId() != null
-				&& usuarioRepository.existsById(alerta.getUsuario().getId()))
-			return ResponseEntity.ok(alertaRepository.save(alerta));
+	@RequestMapping(method = RequestMethod.POST)
+    public ResponseEntity<Alerta> novoTelefone(@RequestBody Alerta alerta) {
+        if (alerta.getUsuario() == null || alerta.getUsuario().getId() == null)
+            return ResponseEntity.badRequest().build();
+        if (!usuarioRepository.existsById(alerta.getUsuario().getId()))
+            return ResponseEntity.notFound().build();
+        Alerta savedAlerta = alertaRepository.save(alerta);
+        return ResponseEntity.ok(savedAlerta);
+    }
 
-		return ResponseEntity.notFound().build();
-	}
+	@RequestMapping(value = "/update", method = RequestMethod.PATCH)
+    public ResponseEntity<Alerta> updateAlerta(@RequestBody Alerta alerta) {
+        if (alerta == null || alerta.getId() == null)
+            return ResponseEntity.badRequest().build();
+        if (!alertaRepository.existsById(alerta.getId()))
+            return ResponseEntity.notFound().build();
 
-	@RequestMapping(value = "/update", method = RequestMethod.PUT)
-	public ResponseEntity<Alerta> updateAlerta(@RequestBody Alerta alerta) {
-		if (alerta != null) {
-			return ResponseEntity.ok(alertaRepository.save(alerta));
-		}
-		return ResponseEntity.notFound().build();
-	}
+        Alerta alertaUpdated = alertaRepository.save(alerta);
+        return ResponseEntity.ok(alertaUpdated);
+    }
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-	public String deleteAlerta(@PathVariable Long id) {
-		if (id != null) {
-			alertaRepository.deleteById(id);
-			return "Deletado com sucesso";
-		}
-		return "Alerta não encontrado";
-	}
+    public ResponseEntity<String> deleteAlerta(@PathVariable Long id) {
+        if (id == null)
+            return ResponseEntity.badRequest().build();
+        if (!alertaRepository.existsById(id))
+            return ResponseEntity.notFound().build();
+
+        alertaRepository.deleteById(id);
+        return ResponseEntity.ok("Telefone removido com sucesso!");
+    }
 }

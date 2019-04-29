@@ -9,6 +9,9 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 
+import com.hazard.model.TipoAlerta;
+import com.hazard.model.Usuario;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;

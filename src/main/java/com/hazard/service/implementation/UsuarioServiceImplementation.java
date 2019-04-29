@@ -1,8 +1,11 @@
 package com.hazard.service.implementation;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.hazard.model.Usuario;
 import com.hazard.repository.UsuarioRepository;
 import com.hazard.service.UsuarioService;
 
@@ -17,9 +20,12 @@ public class UsuarioServiceImplementation implements UsuarioService{
     }
 
 	@Override
-	public boolean verificarLogin(String usuario, String senha) {
-		if(usuarioRepository.findByNomeAndSenha(usuario, senha) != null)
-			return true;
-		return false;
+	public Optional<Usuario> verificarLogin(String usuario, String senha) {
+			return usuarioRepository.findByNomeAndSenha(usuario, senha);
+	}
+
+	@Override
+	public boolean salvarUsuario(Usuario usuario) {
+		return usuarioRepository.save(usuario) != null;
 	}
 }

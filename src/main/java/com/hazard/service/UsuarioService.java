@@ -1,5 +1,10 @@
 package com.hazard.service;
 
+import java.util.Optional;
+
+import com.hazard.model.Usuario;
+
 public interface UsuarioService {
-	boolean verificarLogin(String usuario, String senha);
+	Optional<Usuario> verificarLogin(String usuario, String senha);
+	boolean salvarUsuario(Usuario usuario);
 }

@@ -27,7 +27,7 @@ public class AlertaController {
 		this.usuarioRepository = usuarioRepository;
 	}
 
-	@RequestMapping(value = "/", method = RequestMethod.GET)
+	@RequestMapping(method = RequestMethod.GET)
 	public ResponseEntity<List<Alerta>> buscaAlertas() {
 		return ResponseEntity.ok(alertaRepository.findAll());
 	}

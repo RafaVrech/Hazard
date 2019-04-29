@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -43,5 +44,15 @@ public class UsuarioController {
         }
     }
 	
-	
+	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+	public String deleteUsuario(@PathVariable Long id)
+	{
+		try {
+			return usuarioService.deletarUsuario(id) ? "Deletado com sucesso" : "Usuario não encontrado";
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return "erro";
+	}
 }

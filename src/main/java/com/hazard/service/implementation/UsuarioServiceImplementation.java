@@ -28,4 +28,18 @@ public class UsuarioServiceImplementation implements UsuarioService{
 	public boolean salvarUsuario(Usuario usuario) {
 		return usuarioRepository.save(usuario) != null;
 	}
+	
+	@Override
+	public boolean deletarUsuario(Long id) throws Exception {
+		if(id == null)
+			throw new Exception();
+		
+		Optional<Usuario> usuario = usuarioRepository.findById(id);
+		if(!usuario.isPresent())
+			throw new Exception();
+		
+		usuarioRepository.deleteById(id);
+		
+		return true;
+	}
 }

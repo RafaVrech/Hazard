@@ -5,11 +5,11 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.hazard.exception.ObjetoNaoEcontratoException;
 import com.hazard.model.Alerta;
 import com.hazard.model.Usuario;
 import com.hazard.repository.UsuarioRepository;
 import com.hazard.service.UsuarioService;
-import com.ibm.agenda.exception.ObjetoNaoEcontratoException;
 
 
 @Service

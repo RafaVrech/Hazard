@@ -34,6 +34,7 @@ public class Alerta {
 	    private long latitude;
 	    private long longitude;
 	    private String nome;
+	    private String descricao;
 	    private Date criacao;
 	    
 	    @ManyToOne(targetEntity = Usuario.class)

@@ -1,4 +1,4 @@
-package com.ibm.agenda.exception;
+package com.hazard.exception;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;

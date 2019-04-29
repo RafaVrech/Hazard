@@ -1,4 +1,4 @@
-package com.ibm.agenda.exception;
+package com.hazard.exception;
 
 public class ObjetoNaoEcontratoException extends RuntimeException {
     private Integer code = 1;

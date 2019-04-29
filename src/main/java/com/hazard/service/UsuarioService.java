@@ -5,7 +5,7 @@ import java.util.Optional;
 import com.hazard.model.Usuario;
 
 public interface UsuarioService {
-	Optional<Usuario> verificarLogin(String usuario, String senha);
-	boolean salvarUsuario(Usuario usuario);
+	Usuario verificarLogin(String usuario, String senha);
+	Usuario salvarUsuario(Usuario usuario);
 	boolean deletarUsuario(Long id) throws Exception;
 }

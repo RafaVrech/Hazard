@@ -5,9 +5,11 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.hazard.model.Alerta;
 import com.hazard.model.Usuario;
 import com.hazard.repository.UsuarioRepository;
 import com.hazard.service.UsuarioService;
+import com.ibm.agenda.exception.ObjetoNaoEcontratoException;
 
 
 @Service
@@ -19,14 +21,24 @@ public class UsuarioServiceImplementation implements UsuarioService{
         this.usuarioRepository = usuarioRepository;
     }
 
+//	@Override
+//	public Optional<Usuario> verificarLogin(String usuario, String senha) {
+//			return usuarioRepository.findByNomeAndSenha(usuario, senha);
+//	}
 	@Override
-	public Optional<Usuario> verificarLogin(String usuario, String senha) {
-			return usuarioRepository.findByNomeAndSenha(usuario, senha);
+	public Usuario verificarLogin(String usuario, String senha) {
+        Optional<Usuario> usuarioOptional = usuarioRepository.findByNomeAndSenha(usuario, senha);
+        return usuarioOptional.orElseThrow(() ->
+                new ObjetoNaoEcontratoException("Combinação de usuario e senha incorretos para: " + usuario));
 	}
 
 	@Override
-	public boolean salvarUsuario(Usuario usuario) {
-		return usuarioRepository.save(usuario) != null;
+	public Usuario salvarUsuario(Usuario usuario) {
+        if (usuario.getAlertas() != null) 
+            for(Alerta alerta : usuario.getAlertas()) 
+            	alerta.setUsuario(usuario);
+        
+        return usuarioRepository.save(usuario);
 	}
 	
 	@Override

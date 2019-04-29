@@ -1,7 +1,5 @@
 package com.hazard.controller;
 
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,9 +28,9 @@ public class UsuarioController {
 	public ResponseEntity<Object> buscaContato(@RequestParam(value = "usuario", required = true) String usuario,
 												@RequestParam(value = "senha", required = true) String senha) {
 		
-		Optional<Usuario> usuarioBD = usuarioService.verificarLogin(usuario, senha);
-		return usuarioBD.isPresent() ? ResponseEntity.ok(new Resposta(0, "", usuarioBD)) :
-									   ResponseEntity.badRequest().build();
+		Usuario usuarioRetorno = usuarioService.verificarLogin(usuario, senha);
+
+        return ResponseEntity.ok(new Resposta(0, "", usuarioRetorno));
 	}
 	
 	@RequestMapping(method = RequestMethod.POST)

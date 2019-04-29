@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.hazard.model.Alerta;
 import com.hazard.repository.AlertaRepository;
 import com.hazard.repository.UsuarioRepository;
-import com.ibm.agenda.model.Telefone;
 
 @RestController
 @RequestMapping("/alerta")

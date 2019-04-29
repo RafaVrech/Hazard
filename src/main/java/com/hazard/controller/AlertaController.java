@@ -39,7 +39,7 @@ public class AlertaController {
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<Alerta> novoTelefone(@RequestBody Alerta alerta) {
+    public ResponseEntity<Alerta> novoAlerta(@RequestBody Alerta alerta) {
         if (alerta.getUsuario() == null || alerta.getUsuario().getId() == null)
             return ResponseEntity.badRequest().build();
         if (!usuarioRepository.existsById(alerta.getUsuario().getId()))
@@ -67,6 +67,6 @@ public class AlertaController {
             return ResponseEntity.notFound().build();
 
         alertaRepository.deleteById(id);
-        return ResponseEntity.ok("Telefone removido com sucesso!");
+        return ResponseEntity.ok("Alerta removido com sucesso!");
     }
 }

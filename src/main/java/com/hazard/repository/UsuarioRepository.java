@@ -9,5 +9,5 @@ import com.hazard.model.Usuario;
 
 @Repository
 public interface UsuarioRepository extends JpaRepository<Usuario, Long>{
-	Optional<Usuario> findByNomeAndSenha(String nome, String senha);
+	Optional<Usuario> findByEmailAndSenha(String email, String senha);
 }

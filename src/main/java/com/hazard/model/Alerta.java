@@ -3,15 +3,13 @@ package com.hazard.model;
 import java.util.Date;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.hazard.model.TipoAlerta;
-import com.hazard.model.Usuario;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -38,8 +36,9 @@ public class Alerta {
 	    private String descricao;
 	    private Date criacao;
 	    
-	    @ManyToOne(targetEntity = Usuario.class)
-		@JsonIgnore
+	    
+	    @ManyToOne(targetEntity = Usuario.class, fetch = FetchType.LAZY)
+	    @JoinColumn(name = "post_id")
 	    private Usuario usuario;
 
 	    @ManyToOne(targetEntity = TipoAlerta.class)

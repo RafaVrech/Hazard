@@ -15,6 +15,7 @@ import com.hazard.model.Alerta;
 import com.hazard.repository.AlertaRepository;
 import com.hazard.repository.TipoAlertaRepository;
 import com.hazard.repository.UsuarioRepository;
+import com.hazard.utils.Resposta;
 
 @RestController
 @RequestMapping("/alerta")
@@ -31,51 +32,59 @@ public class AlertaController {
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
-	public ResponseEntity<List<Alerta>> buscaAlertas() {
-		return ResponseEntity.ok(alertaRepository.findAll());
+	public ResponseEntity<Object> buscaAlertas() {
+		List<Alerta> alertas = alertaRepository.findAll();
+		if(alertas.isEmpty())
+			return ResponseEntity.ok(new Resposta(0, "Nenhum alerta cadastrado", null));
+		return ResponseEntity.ok(new Resposta(0, "Todos os alertas recuperados com sucesso", alertas));
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
-	public ResponseEntity<Alerta> buscaAlerta(@PathVariable Long id) {
+	public ResponseEntity<Object> buscaAlerta(@PathVariable Long id) {
 		Optional<Alerta> alertaOptional = alertaRepository.findById(id);
-		return alertaOptional.isPresent() ? ResponseEntity.ok(alertaOptional.get()) : ResponseEntity.notFound().build();
+		return alertaOptional.isPresent() ? 
+				ResponseEntity.ok(new Resposta(0, "Alerta recuperado com sucesso", alertaOptional.get())) :
+				ResponseEntity.badRequest().body(new Resposta(1, "Não foi encontrado alerta com ID: " + id, null));
 	}
 
-	@RequestMapping(method = RequestMethod.POST)//TODO Fazer o repository de tipoAlerta pra salvar ele aqui junto com o alerta
-    public ResponseEntity<Alerta> novoAlerta(@RequestBody Alerta alerta) {
+	@RequestMapping(method = RequestMethod.POST)
+    public ResponseEntity<Object> novoAlerta(@RequestBody Alerta alerta) {
         if (alerta.getUsuario() == null || alerta.getUsuario().getId() == null)
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.badRequest().body(new Resposta(1, "Usuario não preenchido", null));
         if (!usuarioRepository.existsById(alerta.getUsuario().getId()))
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.badRequest().body(new Resposta(1, "Não foi encontrado usuário com ID: " + alerta.getUsuario().getId(), null));
         
         if (alerta.getTipoAlerta() == null || alerta.getTipoAlerta().getId() == null)
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.badRequest().body(new Resposta(1, "Tipo alerta não preenchido", null));
         if (!tipoAlertaRepository.existsById(alerta.getTipoAlerta().getId()))
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.badRequest().body(new Resposta(1, "Não foi encontrado tipoAlerta com ID: " + alerta.getTipoAlerta().getId(), null));
         
         Alerta savedAlerta = alertaRepository.save(alerta);
-        return ResponseEntity.ok(savedAlerta);
+        if(savedAlerta != null)
+        		return ResponseEntity.ok(new Resposta(0, "Alerta salvo com sucesso", savedAlerta));
+    		else		
+    			return ResponseEntity.badRequest().body(new Resposta(1, "Não foi possível salvar o Alerta", null));
     }
 
 	@RequestMapping(value = "/update", method = RequestMethod.PATCH)
-    public ResponseEntity<Alerta> updateAlerta(@RequestBody Alerta alerta) {
+    public ResponseEntity<Object> updateAlerta(@RequestBody Alerta alerta) {
         if (alerta == null || alerta.getId() == null)
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.badRequest().body(new Resposta(1, "Alerta não preenchido", null));
         if (!alertaRepository.existsById(alerta.getId()))
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.badRequest().body(new Resposta(1, "Não foi encontrado alerta com ID: " + alerta.getId(), null));
 
         Alerta alertaUpdated = alertaRepository.save(alerta);
-        return ResponseEntity.ok(alertaUpdated);
+        return ResponseEntity.ok(new Resposta(0, "Alerta alterado com sucesso", alertaUpdated));
     }
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<String> deleteAlerta(@PathVariable Long id) {
+    public ResponseEntity<Object> deleteAlerta(@PathVariable Long id) {
         if (id == null)
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.badRequest().body(new Resposta(1, "Falta parametro ID do alerta a ser deletado", null));
         if (!alertaRepository.existsById(id))
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.badRequest().body(new Resposta(1, "Alerta a ser deletado não encontrado para o ID: " + id, null));
 
         alertaRepository.deleteById(id);
-        return ResponseEntity.ok("Alerta removido com sucesso!");
+        return ResponseEntity.ok(new Resposta(0, "Alerta " + id + " deletado com sucesso", null));
     }
 }

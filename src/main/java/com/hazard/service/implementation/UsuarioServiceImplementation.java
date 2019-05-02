@@ -13,7 +13,7 @@ import com.hazard.service.UsuarioService;
 
 
 @Service
-public class UsuarioServiceImplementation implements UsuarioService{
+public class UsuarioServiceImplementation implements UsuarioService {
 	private UsuarioRepository usuarioRepository;
 	
 	@Autowired
@@ -21,15 +21,11 @@ public class UsuarioServiceImplementation implements UsuarioService{
         this.usuarioRepository = usuarioRepository;
     }
 
-//	@Override
-//	public Optional<Usuario> verificarLogin(String usuario, String senha) {
-//			return usuarioRepository.findByNomeAndSenha(usuario, senha);
-//	}
 	@Override
-	public Usuario verificarLogin(String usuario, String senha) {
-        Optional<Usuario> usuarioOptional = usuarioRepository.findByNomeAndSenha(usuario, senha);
+	public Usuario verificarLogin(String email, String senha) {
+        Optional<Usuario> usuarioOptional = usuarioRepository.findByEmailAndSenha(email, senha);
         return usuarioOptional.orElseThrow(() ->
-                new ObjetoNaoEcontratoException("Combinação de usuario e senha incorretos para: " + usuario));
+                new ObjetoNaoEcontratoException("Combinação de email e senha incorretos para: " + email));
 	}
 
 	@Override

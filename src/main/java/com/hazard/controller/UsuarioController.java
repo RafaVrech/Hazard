@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hazard.model.Usuario;
+import com.hazard.repository.UsuarioRepository;
 import com.hazard.service.UsuarioService;
 import com.hazard.utils.Resposta;
 
@@ -18,40 +19,45 @@ import com.hazard.utils.Resposta;
 public class UsuarioController {
 
 	private UsuarioService usuarioService;
+	private UsuarioRepository usuarioRepository;
 
 	@Autowired
-	public UsuarioController(UsuarioService usuarioService) {
+	public UsuarioController(UsuarioService usuarioService, UsuarioRepository usuarioRepository) {
 		this.usuarioService = usuarioService;
+		this.usuarioRepository = usuarioRepository;
 	}
 
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
-	public ResponseEntity<Object> buscaContato(@RequestParam(value = "usuario", required = true) String usuario,
+	public ResponseEntity<Object> buscaContato(@RequestParam(value = "email", required = true) String email,
 												@RequestParam(value = "senha", required = true) String senha) {
 		
-		Usuario usuarioRetorno = usuarioService.verificarLogin(usuario, senha);
+		Usuario usuarioRetorno = usuarioService.verificarLogin(email, senha);
 
-        return ResponseEntity.ok(new Resposta(0, "", usuarioRetorno));
+        return ResponseEntity.ok(new Resposta(0, "Login efetuado com sucesso", usuarioRetorno));
 	}
 	
-	@RequestMapping(method = RequestMethod.POST)//TODO TA SUBSTITUINDO QUANDO MANDA COM ID JA EXISTENTE
-												//TODO Ta criando usuarios iguais
+	@RequestMapping(method = RequestMethod.POST)//TODO Ta criando usuarios iguais
     public ResponseEntity<Object> novoUsuario(@RequestBody Usuario usuario) {
+		if(usuario.getId() != null)
+			return ResponseEntity.badRequest().body(new Resposta(1, "Um usuário a ser inserido não pode ter um ID já definido", null));
+		if(usuarioRepository.findById(usuario.getId()).isPresent())
+			return ResponseEntity.badRequest().body(new Resposta(1, "O usuário a ser inserido já existe", null));
 		try {
-            return ResponseEntity.ok(usuarioService.salvarUsuario(usuario));
+            return ResponseEntity.ok(new Resposta(0, "Usuario inserido com sucesso", usuarioService.salvarUsuario(usuario)));
         } catch (RuntimeException re) {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.badRequest().body(new Resposta(1, re.getMessage(), null));
         }
     }
 	
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-	public String deleteUsuario(@PathVariable Long id)
+	public ResponseEntity<Object> deleteUsuario(@PathVariable Long id)
 	{
-		try {
-			return usuarioService.deletarUsuario(id) ? "Deletado com sucesso" : "Usuario não encontrado";
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return "erro";
+		if (id == null)
+            return ResponseEntity.badRequest().body(new Resposta(1, "Falta parametro ID do usuario a ser deletado", null));
+        if (!usuarioRepository.existsById(id))
+            return ResponseEntity.badRequest().body(new Resposta(1, "Usuario a ser deletado não encontrado para o ID: " + id, null));
+        
+        usuarioRepository.deleteById(id);
+        return ResponseEntity.ok(new Resposta(0, "Usuario  " + id + " deletado com sucesso", null));
 	}
 }

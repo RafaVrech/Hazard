@@ -33,7 +33,8 @@ public class UsuarioController {
         return ResponseEntity.ok(new Resposta(0, "", usuarioRetorno));
 	}
 	
-	@RequestMapping(method = RequestMethod.POST)//TA SUBSTITUINDO QUANDO MANDA COM ID JA EXISTENTE
+	@RequestMapping(method = RequestMethod.POST)//TODO TA SUBSTITUINDO QUANDO MANDA COM ID JA EXISTENTE
+												//TODO Ta criando usuarios iguais
     public ResponseEntity<Object> novoUsuario(@RequestBody Usuario usuario) {
 		try {
             return ResponseEntity.ok(usuarioService.salvarUsuario(usuario));

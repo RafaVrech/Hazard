@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.hazard.model.Alerta;
 import com.hazard.repository.AlertaRepository;
+import com.hazard.repository.TipoAlertaRepository;
 import com.hazard.repository.UsuarioRepository;
 
 @RestController
@@ -20,11 +21,13 @@ import com.hazard.repository.UsuarioRepository;
 public class AlertaController {
 	private AlertaRepository alertaRepository;
 	private UsuarioRepository usuarioRepository;
+	private TipoAlertaRepository tipoAlertaRepository;
 
 	@Autowired
-	public AlertaController(AlertaRepository alertaRepository, UsuarioRepository usuarioRepository) {
+	public AlertaController(AlertaRepository alertaRepository, UsuarioRepository usuarioRepository, TipoAlertaRepository tipoAlertaRepository) {
 		this.alertaRepository = alertaRepository;
 		this.usuarioRepository = usuarioRepository;
+		this.tipoAlertaRepository = tipoAlertaRepository;
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
@@ -38,12 +41,18 @@ public class AlertaController {
 		return alertaOptional.isPresent() ? ResponseEntity.ok(alertaOptional.get()) : ResponseEntity.notFound().build();
 	}
 
-	@RequestMapping(method = RequestMethod.POST)
+	@RequestMapping(method = RequestMethod.POST)//TODO Fazer o repository de tipoAlerta pra salvar ele aqui junto com o alerta
     public ResponseEntity<Alerta> novoAlerta(@RequestBody Alerta alerta) {
         if (alerta.getUsuario() == null || alerta.getUsuario().getId() == null)
             return ResponseEntity.badRequest().build();
         if (!usuarioRepository.existsById(alerta.getUsuario().getId()))
             return ResponseEntity.notFound().build();
+        
+        if (alerta.getTipoAlerta() == null || alerta.getTipoAlerta().getId() == null)
+            return ResponseEntity.badRequest().build();
+        if (!tipoAlertaRepository.existsById(alerta.getTipoAlerta().getId()))
+            return ResponseEntity.notFound().build();
+        
         Alerta savedAlerta = alertaRepository.save(alerta);
         return ResponseEntity.ok(savedAlerta);
     }

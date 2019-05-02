@@ -9,6 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.hazard.model.TipoAlerta;
 import com.hazard.model.Usuario;
 
@@ -38,6 +39,7 @@ public class Alerta {
 	    private Date criacao;
 	    
 	    @ManyToOne(targetEntity = Usuario.class)
+		@JsonIgnore
 	    private Usuario usuario;
 
 	    @ManyToOne(targetEntity = TipoAlerta.class)

@@ -39,6 +39,5 @@ public class Usuario {
 			targetEntity = Alerta.class,
 			cascade = CascadeType.ALL,
 			fetch = FetchType.LAZY)
-	@JsonIgnore
 	private List<Alerta> alertas;
 }

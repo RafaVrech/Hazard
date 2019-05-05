@@ -15,20 +15,23 @@ import com.hazard.model.Alerta;
 import com.hazard.repository.AlertaRepository;
 import com.hazard.repository.TipoAlertaRepository;
 import com.hazard.repository.UsuarioRepository;
+import com.hazard.service.AlertaService;
 import com.hazard.utils.Resposta;
 
 @RestController
 @RequestMapping("/alerta")
 public class AlertaController {
 	private AlertaRepository alertaRepository;
+	private AlertaService alertaService;
 	private UsuarioRepository usuarioRepository;
 	private TipoAlertaRepository tipoAlertaRepository;
 
 	@Autowired
-	public AlertaController(AlertaRepository alertaRepository, UsuarioRepository usuarioRepository, TipoAlertaRepository tipoAlertaRepository) {
+	public AlertaController(AlertaRepository alertaRepository, UsuarioRepository usuarioRepository, TipoAlertaRepository tipoAlertaRepository, AlertaService alertaService) {
 		this.alertaRepository = alertaRepository;
 		this.usuarioRepository = usuarioRepository;
 		this.tipoAlertaRepository = tipoAlertaRepository;
+		this.alertaService = alertaService;
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
@@ -59,11 +62,7 @@ public class AlertaController {
         if (!tipoAlertaRepository.existsById(alerta.getTipoAlerta().getId()))
             return ResponseEntity.badRequest().body(new Resposta(1, "Não foi encontrado tipoAlerta com ID: " + alerta.getTipoAlerta().getId(), null));
         
-        Alerta savedAlerta = alertaRepository.save(alerta);
-        if(savedAlerta != null)
-        		return ResponseEntity.ok(new Resposta(0, "Alerta salvo com sucesso", savedAlerta));
-    		else		
-    			return ResponseEntity.badRequest().body(new Resposta(1, "Não foi possível salvar o Alerta", null));
+		return ResponseEntity.ok(new Resposta(0, "Alerta salvo com sucesso", alertaService.salvarAlerta(alerta)));
     }
 
 	@RequestMapping(value = "/update", method = RequestMethod.PATCH)

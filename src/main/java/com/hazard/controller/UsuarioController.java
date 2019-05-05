@@ -36,12 +36,12 @@ public class UsuarioController {
         return ResponseEntity.ok(new Resposta(0, "Login efetuado com sucesso", usuarioRetorno));
 	}
 	
-	@RequestMapping(method = RequestMethod.POST)//TODO Ta criando usuarios iguais
+	@RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<Object> novoUsuario(@RequestBody Usuario usuario) {
 		if(usuario.getId() != null)
 			return ResponseEntity.badRequest().body(new Resposta(1, "Um usuário a ser inserido não pode ter um ID já definido", null));
-		if(usuarioRepository.findById(usuario.getId()).isPresent())
-			return ResponseEntity.badRequest().body(new Resposta(1, "O usuário a ser inserido já existe", null));
+		if(usuarioRepository.existsByEmail(usuario.getEmail()))
+			return ResponseEntity.badRequest().body(new Resposta(1, "Um usuário com esse email já existe", null));
 		try {
             return ResponseEntity.ok(new Resposta(0, "Usuario inserido com sucesso", usuarioService.salvarUsuario(usuario)));
         } catch (RuntimeException re) {

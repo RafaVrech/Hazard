@@ -7,6 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
+import javax.validation.constraints.NotNull;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,11 +25,14 @@ public class TipoAlerta {
 			name="seq_tipo_alerta",
 			sequenceName = "seq_tipo_alerta")
     private Long id;
-	
+	@NotNull
     private int gravidade;
-    private String nome;
-    private long raio;
-    private Date expira;
+	@NotNull
+	private String nome;
+	@NotNull
+	private long raio;
+	@NotNull
+	private Date expira;
     
 //    @ManyToOne(targetEntity = Alerta.class)
 //    private List<Alerta> alertas;

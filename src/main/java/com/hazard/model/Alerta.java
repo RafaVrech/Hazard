@@ -11,6 +11,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -39,6 +41,7 @@ public class Alerta {
 	    
 	    @ManyToOne(targetEntity = Usuario.class, fetch = FetchType.LAZY)
 	    @JoinColumn(name = "usuario_id")
+	    @JsonBackReference
 	    private Usuario usuario;
 
 	    @ManyToOne(targetEntity = TipoAlerta.class)

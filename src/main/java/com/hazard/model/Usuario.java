@@ -10,6 +10,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -42,5 +44,6 @@ public class Usuario {
 			orphanRemoval = true
 //			fetch = FetchType.LAZY
 			)
+	@JsonManagedReference
 	private List<Alerta> alertas;
 }

@@ -38,7 +38,7 @@ public class Alerta {
 	    
 	    
 	    @ManyToOne(targetEntity = Usuario.class, fetch = FetchType.LAZY)
-	    @JoinColumn(name = "post_id")
+	    @JoinColumn(name = "usuario_id")
 	    private Usuario usuario;
 
 	    @ManyToOne(targetEntity = TipoAlerta.class)

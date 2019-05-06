@@ -2,6 +2,7 @@ package com.hazard.model;
 
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -32,8 +33,10 @@ public class Alerta {
 				sequenceName = "seq_alerta")
 	    private Long id;
 		
-	    private long latitude;
-	    private long longitude;
+		@Column(precision=10, scale=2)
+	    private double latitude;
+		@Column(precision=10, scale=2)
+	    private double longitude;
 	    private String nome;
 	    private String descricao;
 	    private Date criacao;

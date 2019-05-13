@@ -38,6 +38,15 @@ public class UsuarioController {
         return ResponseEntity.ok(new Resposta(0, "Login efetuado com sucesso", usuarioRetorno));
 	}
 	
+	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
+	public ResponseEntity<Object> buscaUsuario(@PathVariable Long id)
+	{
+		if (id == null)
+			return ResponseEntity.badRequest().body(new Resposta(1, "Falta ID do usuario", null));
+		
+		return ResponseEntity.ok(new Resposta(0, "Usuario resgatado com sucesso", usuarioService.buscaDadosUsuario(id)));
+	}
+	
 	@RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<Object> novoUsuario(@RequestBody Usuario usuario) {
 		if(usuario.getId() != null)

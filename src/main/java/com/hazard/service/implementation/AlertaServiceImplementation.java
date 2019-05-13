@@ -34,9 +34,10 @@ public class AlertaServiceImplementation implements AlertaService {
 		alerta.setTipoAlerta(tipoAlertaRepository.findById(alerta.getTipoAlerta().getId()).orElseThrow(() ->
                 new ObjetoNaoEcontratoException("TipoAlerta não encontrado: " + alerta.getTipoAlerta().getId())));
 		
+		alerta.getUsuario().setAlertas(null);
 		//Cortando loop infinito
-		for(Alerta alertaDentroDoUsuario : alerta.getUsuario().getAlertas())
-			alertaDentroDoUsuario.setUsuario(null);
+//		for(Alerta alertaDentroDoUsuario : alerta.getUsuario().getAlertas())
+//			alertaDentroDoUsuario.setUsuario(null);
 		
 		return alertaRepository.save(alerta);
 	}

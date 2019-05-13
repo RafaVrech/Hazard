@@ -27,6 +27,12 @@ public class UsuarioServiceImplementation implements UsuarioService {
         return usuarioOptional.orElseThrow(() ->
                 new ObjetoNaoEcontratoException("Combinação de email e senha incorretos para: " + email));
 	}
+	@Override
+	public Usuario buscaDadosUsuario(Long id) {
+		Optional<Usuario> usuarioOptional = usuarioRepository.findById(id);
+		return usuarioOptional.orElseThrow(() ->
+		new ObjetoNaoEcontratoException("Não foi encontrado Usuario para: " + id));
+	}
 
 	@Override
 	public Usuario salvarUsuario(Usuario usuario) {

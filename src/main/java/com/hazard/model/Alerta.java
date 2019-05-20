@@ -44,6 +44,7 @@ public class Alerta {
 	    @JsonBackReference
 	    private Usuario usuario;
 
-	    @ManyToOne(targetEntity = TipoAlerta.class)
+	    @ManyToOne
+	    @JsonBackReference
 	    private TipoAlerta tipoAlerta;
 }

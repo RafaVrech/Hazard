@@ -41,10 +41,10 @@ public class Alerta {
 	    
 	    
 	    @ManyToOne
-	    @JsonBackReference
+	    @JsonBackReference(value="usuario-alerta")
 	    private Usuario usuario;
 
 	    @ManyToOne
-	    @JsonBackReference
+	    @JsonBackReference(value="alerta-tipoAlerta")
 	    private TipoAlerta tipoAlerta;
 }

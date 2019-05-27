@@ -46,6 +46,6 @@ public class TipoAlerta {
 			targetEntity = Alerta.class,
 			cascade = CascadeType.ALL,
 			fetch = FetchType.LAZY)
-	@JsonManagedReference
+	@JsonManagedReference(value="alerta-tipoAlerta")
     private List<Alerta> alertas;
 }

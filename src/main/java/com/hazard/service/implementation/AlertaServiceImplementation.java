@@ -1,6 +1,10 @@
 package com.hazard.service.implementation;
 
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.hazard.exception.ObjetoNaoEcontratoException;
@@ -9,6 +13,7 @@ import com.hazard.repository.AlertaRepository;
 import com.hazard.repository.TipoAlertaRepository;
 import com.hazard.repository.UsuarioRepository;
 import com.hazard.service.AlertaService;
+import com.hazard.utils.Resposta;
 
 
 @Service
@@ -25,6 +30,29 @@ public class AlertaServiceImplementation implements AlertaService {
     }
 
 	@Override
+	public List<Alerta> buscarAlertas() {
+		List<Alerta> alertas = alertaRepository.findAll();
+		alertas.forEach(x -> {
+			x.setUsuario(null);
+			x.getTipoAlerta().setAlertas(null);
+		});
+		
+		return alertas;
+	}
+	@Override
+	public ResponseEntity<Object> buscarAlerta(long id) {
+		Optional<Alerta> alertaOptional = alertaRepository.findById(id);
+		
+		if(!alertaOptional.isPresent()) 
+			return ResponseEntity.badRequest().body(new Resposta(1, "Não foi encontrado alerta com ID: " + id, null));
+		Alerta alerta = alertaOptional.get();
+		
+		alerta.getTipoAlerta().setAlertas(null);
+		alerta.getUsuario().setAlertas(null);
+		return ResponseEntity.ok(new Resposta(0, "Alerta recuperado com sucesso", alerta));
+	}
+	
+	@Override
 	public Alerta salvarAlerta(Alerta alerta) {
 		
 		//Verificaçao por segurança, no controller eu já vi se o usuario existe
@@ -35,9 +63,7 @@ public class AlertaServiceImplementation implements AlertaService {
                 new ObjetoNaoEcontratoException("TipoAlerta não encontrado: " + alerta.getTipoAlerta().getId())));
 		
 		alerta.getUsuario().setAlertas(null);
-		//Cortando loop infinito
-//		for(Alerta alertaDentroDoUsuario : alerta.getUsuario().getAlertas())
-//			alertaDentroDoUsuario.setUsuario(null);
+		alerta.getTipoAlerta().setAlertas(null);
 		
 		return alertaRepository.save(alerta);
 	}

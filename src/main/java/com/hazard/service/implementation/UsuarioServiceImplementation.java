@@ -37,11 +37,7 @@ public class UsuarioServiceImplementation implements UsuarioService {
 	@Override
 	public Usuario salvarUsuario(Usuario usuario) {
         if (usuario.getAlertas() != null) 
-        	 throw new ObjetoNaoEcontratoException("Utilize os end-points de criar alerta para criar alertas.");
-//            for(Alerta alerta : usuario.getAlertas()) {
-//            	alerta.setUsuario(Usuario.builder().id(usuario.getId()).build());
-//            }
-            	
+        	 throw new ObjetoNaoEcontratoException("Utilize a funcionalidade de criar alerta para criar alertas. Entre somente com os dados do usuario.");
         
         return usuarioRepository.save(usuario);
 	}

@@ -38,7 +38,7 @@ public class AlertaController {
 
 	@RequestMapping(method = RequestMethod.GET)
 	public ResponseEntity<Object> buscaAlertas() {
-		List<Alerta> alertas = alertaRepository.findAll();
+		List<Alerta> alertas = alertaService.buscarAlertas();
 		if(alertas.isEmpty())
 			return ResponseEntity.ok(new Resposta(0, "Nenhum alerta cadastrado", null));
 		return ResponseEntity.ok(new Resposta(0, "Todos os alertas recuperados com sucesso", alertas));
@@ -46,10 +46,7 @@ public class AlertaController {
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	public ResponseEntity<Object> buscaAlerta(@PathVariable Long id) {
-		Optional<Alerta> alertaOptional = alertaRepository.findById(id);
-		return alertaOptional.isPresent() ? 
-				ResponseEntity.ok(new Resposta(0, "Alerta recuperado com sucesso", alertaOptional.get())) :
-				ResponseEntity.badRequest().body(new Resposta(1, "Não foi encontrado alerta com ID: " + id, null));
+		return alertaService.buscarAlerta(id);
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
@@ -74,7 +71,7 @@ public class AlertaController {
         if (!alertaRepository.existsById(alerta.getId()))
             return ResponseEntity.badRequest().body(new Resposta(1, "Não foi encontrado alerta com ID: " + alerta.getId(), null));
 
-        Alerta alertaUpdated = alertaRepository.save(alerta);
+        Alerta alertaUpdated = alertaService.salvarAlerta(alerta);
         return ResponseEntity.ok(new Resposta(0, "Alerta alterado com sucesso", alertaUpdated));
     }
 

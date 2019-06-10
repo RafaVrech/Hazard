@@ -10,9 +10,6 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -42,10 +39,8 @@ public class Alerta {
 	    
 	    
 	    @ManyToOne
-	    @JsonBackReference(value="usuario-alerta")
 	    private Usuario usuario;
 
 	    @ManyToOne
-	    @JsonManagedReference(value="alerta-tipoAlerta")
 	    private TipoAlerta tipoAlerta;
 }

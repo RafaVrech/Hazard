@@ -11,7 +11,9 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -43,6 +45,5 @@ public class Usuario {
 			targetEntity = Alerta.class,
 			cascade = CascadeType.ALL,
 			fetch = FetchType.LAZY)
-	@JsonManagedReference(value="usuario-alerta")
 	private List<Alerta> alertas;
 }

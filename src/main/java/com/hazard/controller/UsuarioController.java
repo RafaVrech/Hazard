@@ -34,7 +34,12 @@ public class UsuarioController {
 												@RequestParam(value = "senha", required = true) String senha) {
 		
 		Usuario usuarioRetorno = usuarioService.verificarLogin(email, senha);
-
+		
+		usuarioRetorno.getAlertas().forEach(x -> {
+			x.setUsuario(null);
+			x.getTipoAlerta().setAlertas(null);
+		});
+		
         return ResponseEntity.ok(new Resposta(0, "Login efetuado com sucesso", usuarioRetorno));
 	}
 	
@@ -43,8 +48,14 @@ public class UsuarioController {
 	{
 		if (id == null)
 			return ResponseEntity.badRequest().body(new Resposta(1, "Falta ID do usuario", null));
+		Usuario usuarioRetorno = usuarioService.buscaDadosUsuario(id);
 		
-		return ResponseEntity.ok(new Resposta(0, "Usuario resgatado com sucesso", usuarioService.buscaDadosUsuario(id)));
+		usuarioRetorno.getAlertas().forEach(x -> {
+			x.setUsuario(null);
+			x.getTipoAlerta().setAlertas(null);
+		});
+		
+		return ResponseEntity.ok(new Resposta(0, "Usuario resgatado com sucesso", usuarioRetorno));
 	}
 	
 	@RequestMapping(method = RequestMethod.POST)

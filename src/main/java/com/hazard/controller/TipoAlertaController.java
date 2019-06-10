@@ -30,6 +30,7 @@ public class TipoAlertaController {
 	@RequestMapping(method = RequestMethod.GET)
 	public ResponseEntity<Object> buscaTipoAlertas() {
 		List<TipoAlerta> tipoAlertas = tipoAlertaRepository.findAll();
+		tipoAlertas.forEach(x -> x.setAlertas(null));
 		if(tipoAlertas.isEmpty())
 			return ResponseEntity.ok(new Resposta(0, "Nenhum tipo de alerta cadastrado", null));
 		return ResponseEntity.ok(new Resposta(0, "Todos os tipos de alertas recuperados com sucesso", tipoAlertas));
@@ -38,13 +39,21 @@ public class TipoAlertaController {
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	public ResponseEntity<Object> buscaTipoAlerta(@PathVariable Long id) {
 		Optional<TipoAlerta> tipoAlertaOptional = tipoAlertaRepository.findById(id);
-		return tipoAlertaOptional.isPresent() ? 
-				ResponseEntity.ok(new Resposta(0, "Tipo de alerta recuperado com sucesso", ResponseEntity.ok(tipoAlertaOptional.get()))) :
-				ResponseEntity.badRequest().body(new Resposta(1, "Não foi encontrado tipo de alerta alerta com ID: " + id, null));
+		
+		if(!tipoAlertaOptional.isPresent()) 
+			return ResponseEntity.badRequest().body(new Resposta(1, "Não foi encontrado tipo de alerta alerta com ID: " + id, null));
+		
+		TipoAlerta tipoAlerta = tipoAlertaOptional.get();
+		tipoAlerta.getAlertas().forEach(x -> {
+			x.setTipoAlerta(null); 
+			x.getUsuario().setAlertas(null);
+		});
+		return ResponseEntity.ok(new Resposta(0, "Tipo de alerta recuperado com sucesso", ResponseEntity.ok()));
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<Object> novoTipoAlerta(@RequestBody TipoAlerta tipoAlerta) {
+		tipoAlerta.setAlertas(null);
         TipoAlerta savedTipoAlerta = tipoAlertaRepository.save(tipoAlerta);
         if(savedTipoAlerta != null)
         		return ResponseEntity.ok(new Resposta(0, "Tipo de alerta salvo com sucesso", savedTipoAlerta));
@@ -58,7 +67,7 @@ public class TipoAlertaController {
             return ResponseEntity.badRequest().body(new Resposta(1, "Tipo de alerta não preenchido", null));
         if (!tipoAlertaRepository.existsById(tipoAlerta.getId()))
             return ResponseEntity.badRequest().body(new Resposta(1, "Não foi encontrado tipo de alerta com ID: " + tipoAlerta.getId(), null));
-
+        tipoAlerta.setAlertas(null);
         TipoAlerta tipoAlertaUpdated = tipoAlertaRepository.save(tipoAlerta);
         return ResponseEntity.ok(new Resposta(0, "Tipo de alerta alterado com sucesso", tipoAlertaUpdated));
     }

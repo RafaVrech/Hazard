@@ -15,7 +15,9 @@ import javax.persistence.SequenceGenerator;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -47,6 +49,5 @@ public class TipoAlerta {
 			targetEntity = Alerta.class,
 			cascade = CascadeType.ALL,
 			fetch = FetchType.LAZY)
-	@JsonBackReference(value="alerta-tipoAlerta")
     private List<Alerta> alertas;
 }
